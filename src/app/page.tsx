@@ -498,7 +498,7 @@ function ContactSection() {
     
     // Create clean form data with only required fields
     const formData = new FormData();
-    formData.append('access_key', 'YOUR_WEB3FORMS_ACCESS_KEY'); // Get free key at https://web3forms.com
+    formData.append('access_key', '30bc8fc2-a772-46fc-82a7-b8ed62cb6f9c'); // Get free key at https://web3forms.com
     formData.append('name', form.querySelector<HTMLInputElement>('#name')?.value || '');
     formData.append('email', form.querySelector<HTMLInputElement>('#email')?.value || '');
     formData.append('subject', form.querySelector<HTMLInputElement>('#subject')?.value || '');
