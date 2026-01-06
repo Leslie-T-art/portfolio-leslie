@@ -11,14 +11,12 @@ import {
   Cpu,
   Zap,
   Globe,
-  Layers,
   Terminal,
   Send,
   ArrowUpRight,
   Rocket,
   Volume2,
   VolumeX,
-  Shield,
   CheckCircle,
   Loader2
 } from "lucide-react";
@@ -293,49 +291,48 @@ function AboutSection() {
   );
 }
 
-// Projects Section - Updated with real projects
+// Projects Section - Clean Apple-style with Parallax
 function ProjectsSection() {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"]
+  });
 
   const projects = [
     {
       name: "Verix CyberPal",
       url: "https://verixcyberpal.co.zw/",
-      description: "Comprehensive cybersecurity platform providing advanced threat detection, security monitoring, and digital protection solutions for businesses.",
-      tags: ["React", "Node.js", "Cybersecurity", "AI"],
-      gradient: "linear-gradient(135deg, #0f172a 0%, #1e40af 50%, #3b82f6 100%)",
-      logo: "🛡️",
-      accent: "#fff"
+      description: "Comprehensive cybersecurity platform providing advanced threat detection and security monitoring.",
+      tags: ["React", "Node.js", "Cybersecurity", "AI"]
     },
     {
       name: "Security Dashboard",
       url: "https://verixcyberpal.co.zw/",
-      description: "Real-time security monitoring dashboard with threat analytics, vulnerability scanning, and automated incident response capabilities.",
-      tags: ["TypeScript", "Next.js", "Analytics", "API"],
-      gradient: "linear-gradient(135deg, #0c4a6e 0%, #0891b2 50%, #06b6d4 100%)",
-      logo: "📊",
-      accent: "#fff"
+      description: "Real-time security monitoring with threat analytics and vulnerability scanning.",
+      tags: ["TypeScript", "Next.js", "Analytics"]
     },
     {
       name: "Threat Intelligence",
       url: "https://verixcyberpal.co.zw/",
-      description: "AI-powered threat intelligence system that analyzes patterns, predicts vulnerabilities, and provides actionable security insights.",
-      tags: ["Python", "Machine Learning", "Cloud", "API"],
-      gradient: "linear-gradient(135deg, #581c87 0%, #7c3aed 50%, #a855f7 100%)",
-      logo: "🔍",
-      accent: "#fff"
+      description: "AI-powered threat intelligence system that analyzes patterns and predicts vulnerabilities.",
+      tags: ["Python", "ML", "Cloud"]
     },
     {
       name: "Secure Solutions",
       url: "https://verixcyberpal.co.zw/",
-      description: "Enterprise-grade security solutions including encryption, access control, and compliance management for modern organizations.",
-      tags: ["Enterprise", "Compliance", "Encryption", "IAM"],
-      gradient: "linear-gradient(135deg, #065f46 0%, #059669 50%, #10b981 100%)",
-      logo: "🔐",
-      accent: "#fff"
+      description: "Enterprise-grade security solutions including encryption and access control.",
+      tags: ["Enterprise", "Encryption", "IAM"]
     }
   ];
+
+  // Parallax transforms for each card
+  const y1 = useTransform(scrollYProgress, [0, 1], [0, -60]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [0, -120]);
+  const y3 = useTransform(scrollYProgress, [0, 1], [0, -40]);
+  const y4 = useTransform(scrollYProgress, [0, 1], [0, -100]);
+  const parallaxValues = [y1, y2, y3, y4];
 
   return (
     <section id="projects" className="section projects-section" ref={ref}>
@@ -343,7 +340,7 @@ function ProjectsSection() {
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
           className="projects-header"
         >
           <span className="section-label">Portfolio</span>
@@ -355,67 +352,41 @@ function ProjectsSection() {
           </p>
         </motion.div>
 
-        <div className="projects-grid">
+        <div className="projects-masonry">
           {projects.map((project, index) => (
-            <motion.div
+            <motion.a
               key={index}
-              initial={{ opacity: 0, y: 60 }}
+              href={project.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0, y: 80 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="project-card"
+              transition={{ 
+                duration: 0.8, 
+                delay: index * 0.15,
+                ease: [0.25, 0.1, 0.25, 1]
+              }}
+              style={{ y: parallaxValues[index] }}
+              className="project-card-apple"
             >
-              <div className="project-preview" style={{ background: project.gradient }}>
-                <div className="project-brand">
-                  <span className="brand-logo" style={{ color: project.accent }}>{project.logo}</span>
-                  <span className="brand-name" style={{ color: project.accent }}>{project.name}</span>
+              <div className="card-inner">
+                <div className="card-icon">📌</div>
+                <div className="card-content">
+                  <h3 className="card-title">{project.name}</h3>
+                  <p className="card-description">{project.description}</p>
+                  <div className="card-tags">
+                    {project.tags.map((tag, tagIndex) => (
+                      <span key={tagIndex} className="card-tag">{tag}</span>
+                    ))}
+                  </div>
                 </div>
-                <div className="project-dots">
-                  {[...Array(12)].map((_, i) => (
-                    <div key={i} className="dot" style={{ animationDelay: `${i * 0.1}s` }} />
-                  ))}
-                </div>
-                <div className="project-preview-overlay">
-                  <a 
-                    href={project.url} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="preview-btn"
-                  >
-                    <span>Visit Site</span>
-                    <ArrowUpRight size={18} />
-                  </a>
+                <div className="card-arrow">
+                  <ArrowUpRight size={20} />
                 </div>
               </div>
-              
-              <div className="project-info">
-                <h3 className="project-name">{project.name}</h3>
-                <p className="project-description">{project.description}</p>
-                <div className="project-tags">
-                  {project.tags.map((tag, tagIndex) => (
-                    <span key={tagIndex} className="project-tag">{tag}</span>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
+            </motion.a>
           ))}
         </div>
-      </div>
-
-      <div className="floating-icons">
-        <motion.div
-          animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
-          transition={{ duration: 6, repeat: Infinity }}
-          className="floating-icon icon-1"
-        >
-          <Shield size={48} />
-        </motion.div>
-        <motion.div
-          animate={{ y: [0, 20, 0], rotate: [0, -5, 0] }}
-          transition={{ duration: 7, repeat: Infinity, delay: 1 }}
-          className="floating-icon icon-2"
-        >
-          <Layers size={48} />
-        </motion.div>
       </div>
     </section>
   );
@@ -670,9 +641,14 @@ function ContactSection() {
         </motion.div>
       </div>
 
-      <div className="contact-bg">
-        <div className="gradient-orb orb-1" />
-        <div className="gradient-orb orb-2" />
+      <div className="contact-spline-bg">
+        <iframe 
+          src="https://my.spline.design/100followersfocus-MjPdSpsDcIWsS3Xhagdj9eE9/" 
+          frameBorder="0" 
+          width="100%" 
+          height="100%"
+          title="3D Background"
+        />
       </div>
     </section>
   );
