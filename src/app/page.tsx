@@ -642,12 +642,9 @@ function ContactSection() {
       </div>
 
       <div className="contact-spline-bg">
-        <iframe 
-          src="https://my.spline.design/100followersfocus-MjPdSpsDcIWsS3Xhagdj9eE9/" 
-          frameBorder="0" 
-          width="100%" 
-          height="100%"
-          title="3D Background"
+        <spline-viewer 
+          url="https://prod.spline.design/iBbFqD-WAnVdKDBo/scene.splinecode"
+          loading-anim-type="spinner-small-dark"
         />
       </div>
     </section>

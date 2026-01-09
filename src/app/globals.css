@@ -1400,12 +1400,12 @@ body {
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
+  background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
 }
 
-.contact-spline-bg iframe {
+.contact-spline-bg spline-viewer {
   width: 100%;
   height: 100%;
-  border: none;
   pointer-events: none;
 }
 
