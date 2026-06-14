@@ -20,6 +20,7 @@ import {
   CheckCircle,
   Loader2
 } from "lucide-react";
+import Script from "next/script";
 
 // Cursor Glow Effect
 function CursorGlow() {
@@ -115,9 +116,10 @@ function BottomNavigation() {
   );
 }
 
-// Scroll-following ribbon stroke
-function ScrollRibbon({ scrollYProgress }: { scrollYProgress: any }) {
-  const pathLength = useTransform(scrollYProgress, [0, 1], [0.05, 1]);
+// Full-page scroll-following ribbon stroke
+function PageRibbon() {
+  const { scrollYProgress } = useScroll();
+  const pathLength = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   return (
     <svg
@@ -127,7 +129,8 @@ function ScrollRibbon({ scrollYProgress }: { scrollYProgress: any }) {
       fill="none"
       overflow="visible"
       xmlns="http://www.w3.org/2000/svg"
-      className="hero-ribbon"
+      className="page-ribbon"
+      preserveAspectRatio="xMidYMid meet"
       aria-hidden="true"
     >
       <motion.path
@@ -143,14 +146,10 @@ function ScrollRibbon({ scrollYProgress }: { scrollYProgress: any }) {
   );
 }
 
-// Hero Section with Portrait + Scroll Ribbon
+// Hero Section with centered Portrait
 function HeroSection() {
   const ref = useRef<HTMLElement>(null);
   const { scrollY } = useScroll();
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
-  });
 
   // Transform based on window scroll position
   const opacity = useTransform(scrollY, [0, 400], [1, 0]);
@@ -158,8 +157,6 @@ function HeroSection() {
 
   return (
     <section className="hero" ref={ref}>
-      <ScrollRibbon scrollYProgress={scrollYProgress} />
-
       <motion.div
         className="hero-portrait"
         initial={{ opacity: 0, scale: 0.96 }}
@@ -167,7 +164,7 @@ function HeroSection() {
         transition={{ duration: 0.9, ease: [0.25, 0.1, 0.25, 1] }}
       >
         <img
-          src="/leslie-portrait.png"
+          src="/leslie-portrait-cutout.png"
           alt="Leslie Chihwai, software engineer, seated with hands clasped"
         />
       </motion.div>
@@ -680,7 +677,12 @@ function ContactSection() {
         </motion.div>
       </div>
 
-      <div className="contact-spline-bg" />
+      <div className="contact-spline-bg">
+        <spline-viewer 
+          url="https://prod.spline.design/iBbFqD-WAnVdKDBo/scene.splinecode"
+          loading-anim-type="spinner-small-dark"
+        />
+      </div>
     </section>
   );
 }
@@ -707,11 +709,30 @@ function Footer() {
   );
 }
 
+// Declare spline-viewer as a valid JSX element
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'spline-viewer': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement> & {
+        url?: string;
+        'loading-anim-type'?: string;
+      }, HTMLElement>;
+    }
+  }
+}
+
 // Main Page Component
 export default function Home() {
   return (
     <main>
+      <Script 
+        src="https://unpkg.com/@splinetool/viewer@1.12.28/build/spline-viewer.js"
+        type="module"
+        strategy="lazyOnload"
+      />
+
       <div className="grid-bg" />
+      <PageRibbon />
       <CursorGlow />
       <BottomNavigation />
 
